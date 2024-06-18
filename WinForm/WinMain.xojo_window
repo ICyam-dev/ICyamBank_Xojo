@@ -77,6 +77,11 @@ End
 	#tag EndMethod
 
 
+	#tag Property, Flags = &h0
+		bdd_ICyamBank As string
+	#tag EndProperty
+
+
 #tag EndWindowCode
 
 #tag ViewBehavior
@@ -313,6 +318,14 @@ End
 		Group="Deprecated"
 		InitialValue="False"
 		Type="Boolean"
+		EditorType=""
+	#tag EndViewProperty
+	#tag ViewProperty
+		Name="bdd_ICyamBank"
+		Visible=false
+		Group="Behavior"
+		InitialValue=""
+		Type="string"
 		EditorType=""
 	#tag EndViewProperty
 #tag EndViewBehavior

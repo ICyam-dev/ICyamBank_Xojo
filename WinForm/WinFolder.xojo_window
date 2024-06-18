@@ -403,11 +403,74 @@ End
 #tag WindowCode
 	#tag Event
 		Sub Opening()
-		  // Ajouter l'option "Nouveau dossier..." à la PopupMenu
+		  Var f As FolderItem
+		  Var bs As BinaryStream
+		  Var fileForder, C1, C2 As String
+		  Var i, posCol As Integer
+		  
+		  // Initialiser les contrôles
+		  TFNameFolder.Text = ""
+		  TFLocationFolder.Text = ""
+		  TFNameFolder.Enabled = False
+		  Btn_ChoseFolder.Enabled = False
+		  
+		  // Initialiser le PopupMenu
+		  CBListeFolder.RemoveAllRows
 		  CBListeFolder.AddRow(App.kCBWinFolderNewFile)
-		  CBListeFolder.AddRow("-------------------------")
+		  CBListeFolder.AddRow("------")
+		  
+		  // Lire le fichier "folder.icb" et ajouter les noms de dossiers
+		  
+		  // Définir le chemin vers le fichier "folder.icb"
+		  f = New FolderItem("folder.icb", FolderItem.PathModes.Native)
+		  
+		  // Vérifier si le fichier existe
+		  If f.Exists Then
+		    // Ouvrir le fichier en mode lecture binaire
+		    bs = BinaryStream.Open(f, False)
+		    
+		    If bs <> Nil Then
+		      // Lire tout le contenu du fichier avec l'encodage UTF-8
+		      fileForder = bs.Read(bs.Length, Encodings.UTF8)
+		      MessageBox("Contenu du fichier : " + fileForder)
+		      // Fermer le flux binaire
+		      bs.Close
+		    End If
+		    
+		    // Supprimer le dernier caractère du contenu lu (souvent un séparateur en trop)
+		    fileForder = fileForder.Left(fileForder.Length - 1)
+		    
+		    // Diviser le contenu en entrées utilisant le point-virgule (";") comme séparateur
+		    folders = fileForder.ToArray(";")
+		    
+		    // Parcourir chaque entrée
+		    For i = 0 To folders.LastIndex
+		      
+		      //Trouver la position de la virgule (",") dans l'entrée et extraire les datas
+		      posCol = InStr(folders(i), ",")
+		      C1 = Ltrim(Left(folders(i), posCol - 1))
+		      C2 = Ltrim(Right(folders(i), Len(folders(i)) - posCol))
+		      
+		      // Ajouter le nom du dossier au PopupMenu
+		      CBListeFolder.AddRow(C1)
+		      
+		    Next
+		    
+		  Else
+		    // Si le fichier n'existe pas, créer un nouveau fichier vide
+		    Var outputStream As TextOutputStream
+		    outputStream = TextOutputStream.Create(f)
+		    outputStream.Close
+		    
+		    MessageBox("Le fichier folder.icb n'existe pas et a été créé.")
+		  End If
 		End Sub
 	#tag EndEvent
+
+
+	#tag Property, Flags = &h21
+		Private folders() As String
+	#tag EndProperty
 
 
 #tag EndWindowCode
@@ -415,11 +478,32 @@ End
 #tag Events CBListeFolder
 	#tag Event
 		Sub SelectionChanged(item As DesktopMenuItem)
+		  Var itemSelect, posCol As Integer
+		  Var C1, C2 As String
+		  
 		  //Activation des option des options pour la crétion d'un dossier
 		  If CBListeFolder.SelectedRowIndex = 0 Then
 		    TFNameFolder.Enabled = True
+		    TFLocationFolder.Enabled = False
 		    Btn_ChoseFolder.Enabled = True
-		  End
+		    TFNameFolder.Text = ""
+		    TFLocationFolder.Text = ""
+		  Else
+		    TFNameFolder.Enabled = False
+		    Btn_ChoseFolder.Enabled = False
+		    
+		    //déterminer l'index du dossier dans le tableau
+		    itemSelect = CBListeFolder.SelectedRowIndex - 2
+		    
+		    //Trouver la position de la virgule (",") dans l'entrée et extraire les datas
+		    posCol = InStr(folders(itemSelect), ",")
+		    C1 = Ltrim(Left(folders(itemSelect), posCol - 1))
+		    C2 = Ltrim(Right(folders(itemSelect), Len(folders(itemSelect)) - posCol))
+		    
+		    //Extraire en clair les information du dossier
+		    TFNameFolder.Text = C1
+		    TFLocationFolder.Text = C2
+		  End If
 		End Sub
 	#tag EndEvent
 #tag EndEvents
@@ -449,6 +533,72 @@ End
 #tag Events Btn_Close
 	#tag Event
 		Sub Pressed()
+		  
+		  
+		  
+		  //----------Traitement du Boutton OK
+		  //
+		  if CBListeFolder.SelectedRowIndex = 0 then //----------Dans le cas où "Nouveau dossier" est sélectionné
+		    // 1. Vérifier que tous les TextField sont correctement renseignés
+		    If TFNameFolder.Text.Trim = "" Then
+		      MessageBox(App.kMessWinFolderAlert01)
+		      Return
+		    End If
+		    If TFLocationFolder.Text.Trim = "" Then
+		      MessageBox(App.kMessWinFolderAlert02)
+		      Return
+		    End If
+		    
+		    // 2. Rendre compatible le TFNameFolder avec un nom de fichier correct
+		    Var validName As String = TFNameFolder.Text.Trim.ReplaceAll(" ", "_").ReplaceAll("/", "_").ReplaceAll("\", "_")
+		    
+		    // 3. Copier la base de données SQLite dans le dossier du TFLocationFolder en la renommant
+		    Var sourceDB As FolderItem = New FolderItem("ICyamBank.sqlite")
+		    Var destinationFolder As FolderItem = New FolderItem(TFLocationFolder.Text)
+		    Var destinationDB As FolderItem = destinationFolder.Child(validName + ".sqlite")
+		    
+		    If Not sourceDB.Exists Then
+		      MessageBox("Le fichier de base de données source n'existe pas.")
+		      Return
+		    End If
+		    
+		    Try
+		      sourceDB.CopyTo(destinationDB)
+		    Catch e As IOException
+		      MessageBox("Erreur lors de la copie de la base de données : " + e.Message)
+		      Return
+		    End Try
+		    
+		    // 4. Compléter ou créer le fichier texte "folder.icb"
+		    Var icbFile As FolderItem = destinationFolder.Child("folder.icb")
+		    Var icbTextStream As TextOutputStream
+		    
+		    If icbFile.Exists Then
+		      icbTextStream = TextOutputStream.Append(icbFile)
+		    Else
+		      icbTextStream = TextOutputStream.Create(icbFile)
+		    End If
+		    
+		    Try
+		      icbTextStream.WriteLine(validName + "," + TFLocationFolder.Text + ";")
+		    Catch e As IOException
+		      MessageBox("Erreur lors de l'écriture dans le fichier folder.icb : " + e.Message)
+		    Finally
+		      icbTextStream.Close
+		    End Try
+		    
+		    //MessageBox("Le nouveau dossier a été créé avec succès.")
+		    
+		    
+		  Else //Dans le cas où l'utilisateur sélectionne un dossier
+		    
+		    //Enregistrement de l'élémént de la Base de donnée
+		    WinMain.bdd_ICyamBank = TFNameFolder.Text + TFLocationFolder.Text + ".sqlite"
+		    
+		    //MessageBox(WinMain.bdd_ICyamBank)
+		    
+		  End
+		  
 		  //Fermetur de la fenetre
 		  WinFolder.Close
 		  

@@ -90,6 +90,20 @@ Inherits DesktopApplication
 		#Tag Instance, Platform = Any, Language = en-GB, Definition  = \"&About\xE2\x80\xA6"
 	#tag EndConstant
 
+	#tag Constant, Name = kMessWinFolderAlert01, Type = String, Dynamic = False, Default = \"Veuillez entrer un nom de dossier.", Scope = Public
+		#Tag Instance, Platform = Any, Language = Default, Definition  = \"Veuillez entrer un nom de dossier."
+		#Tag Instance, Platform = Any, Language = fr, Definition  = \"Veuillez entrer un nom de dossier."
+		#Tag Instance, Platform = Any, Language = en, Definition  = \"Please enter a file name."
+		#Tag Instance, Platform = Any, Language = en-GB, Definition  = \"Please enter a file name."
+	#tag EndConstant
+
+	#tag Constant, Name = kMessWinFolderAlert02, Type = String, Dynamic = False, Default = \"Veuillez s\xC3\xA9lectionner un emplacement pour le dossier.", Scope = Public
+		#Tag Instance, Platform = Any, Language = Default, Definition  = \"Veuillez s\xC3\xA9lectionner un emplacement pour le dossier."
+		#Tag Instance, Platform = Any, Language = fr, Definition  = \"Veuillez s\xC3\xA9lectionner un emplacement pour le dossier."
+		#Tag Instance, Platform = Any, Language = en, Definition  = \"Please select a location for the file.."
+		#Tag Instance, Platform = Any, Language = en-GB, Definition  = \"Please select a location for the file.."
+	#tag EndConstant
+
 	#tag Constant, Name = kPromptWinChoseFolder, Type = String, Dynamic = False, Default = \"Choisissez un emplacement pour votre dossier", Scope = Public
 		#Tag Instance, Platform = Any, Language = Default, Definition  = \"Choisissez un emplacement pour votre dossier"
 		#Tag Instance, Platform = Any, Language = fr, Definition  = \"Choisissez un emplacement pour votre dossier"
