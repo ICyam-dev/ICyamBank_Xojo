@@ -316,7 +316,7 @@ Begin DesktopWindow WinFolder
       Visible         =   True
       Width           =   466
    End
-   Begin DesktopBevelButton BevelButton1
+   Begin DesktopBevelButton Btn_ChoseFolder
       Active          =   False
       AllowAutoDeactivate=   True
       AllowFocus      =   True
@@ -354,7 +354,7 @@ Begin DesktopWindow WinFolder
       TabIndex        =   9
       TabPanelIndex   =   0
       TextColor       =   &c00000000
-      Tooltip         =   ""
+      Tooltip         =   "#App.kPromptWinChoseFolder"
       Top             =   235
       Transparent     =   False
       Underline       =   False
@@ -404,13 +404,48 @@ End
 	#tag Event
 		Sub Opening()
 		  // Ajouter l'option "Nouveau dossier..." à la PopupMenu
-		  CBListeFolder.AddRow("Nouveau dossier...")
+		  CBListeFolder.AddRow(App.kCBWinFolderNewFile)
+		  CBListeFolder.AddRow("-------------------------")
 		End Sub
 	#tag EndEvent
 
 
 #tag EndWindowCode
 
+#tag Events CBListeFolder
+	#tag Event
+		Sub SelectionChanged(item As DesktopMenuItem)
+		  //Activation des option des options pour la crétion d'un dossier
+		  If CBListeFolder.SelectedRowIndex = 0 Then
+		    TFNameFolder.Enabled = True
+		    Btn_ChoseFolder.Enabled = True
+		  End
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events Btn_ChoseFolder
+	#tag Event
+		Sub Pressed()
+		  // Créer un sélecteur de dossier
+		  Var dlg As New SelectFolderDialog
+		  dlg.Title = App.kTitleWinChoseFolder
+		  dlg.PromptText = App.kPromptWinChoseFolder
+		  
+		  // Afficher le sélecteur de dossier
+		  Var f As FolderItem
+		  f = dlg.ShowModal
+		  
+		  // Vérifier si un dossier a été sélectionné
+		  If f <> Nil Then
+		    // Récupérer le chemin absolu et le mettre dans TFLocationFolder
+		    TFLocationFolder.Text = f.NativePath
+		  Else
+		    // L'utilisateur a annulé la sélection
+		    TFLocationFolder.Text = ""
+		  End If
+		End Sub
+	#tag EndEvent
+#tag EndEvents
 #tag Events Btn_Close
 	#tag Event
 		Sub Pressed()

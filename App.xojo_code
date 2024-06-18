@@ -6,6 +6,13 @@ Inherits DesktopApplication
 	#tag EndProperty
 
 
+	#tag Constant, Name = kCBWinFolderNewFile, Type = String, Dynamic = False, Default = \"Nouveau Dossier...", Scope = Public
+		#Tag Instance, Platform = Any, Language = Default, Definition  = \"Nouveau Dossier..."
+		#Tag Instance, Platform = Any, Language = fr, Definition  = \"Nouveau Dossier..."
+		#Tag Instance, Platform = Any, Language = en, Definition  = \"New File\xE2\x80\xA6"
+		#Tag Instance, Platform = Any, Language = en-GB, Definition  = \"New File\xE2\x80\xA6"
+	#tag EndConstant
+
 	#tag Constant, Name = kLabelCBListeFolder, Type = String, Dynamic = False, Default = \"S\xC3\xA9lectionnez ou cr\xC3\xA9ez un dossier", Scope = Public
 		#Tag Instance, Platform = Any, Language = Default, Definition  = \"S\xC3\xA9lectionnez ou cr\xC3\xA9ez un dossier :"
 		#Tag Instance, Platform = Any, Language = fr, Definition  = \"S\xC3\xA9lectionnez ou cr\xC3\xA9ez un dossier :"
@@ -81,6 +88,20 @@ Inherits DesktopApplication
 		#Tag Instance, Platform = Any, Language = fr, Definition  = \"&A Propos de..."
 		#Tag Instance, Platform = Any, Language = en, Definition  = \"&About\xE2\x80\xA6"
 		#Tag Instance, Platform = Any, Language = en-GB, Definition  = \"&About\xE2\x80\xA6"
+	#tag EndConstant
+
+	#tag Constant, Name = kPromptWinChoseFolder, Type = String, Dynamic = False, Default = \"Choisissez un emplacement pour votre dossier", Scope = Public
+		#Tag Instance, Platform = Any, Language = Default, Definition  = \"Choisissez un emplacement pour votre dossier"
+		#Tag Instance, Platform = Any, Language = fr, Definition  = \"Choisissez un emplacement pour votre dossier"
+		#Tag Instance, Platform = Any, Language = en, Definition  = \"Choose a location for your folder"
+		#Tag Instance, Platform = Any, Language = en-GB, Definition  = \"Choose a location for your folder"
+	#tag EndConstant
+
+	#tag Constant, Name = kTitleWinChoseFolder, Type = String, Dynamic = False, Default = \"S\xC3\xA9lectionnez un dossier", Scope = Public
+		#Tag Instance, Platform = Any, Language = Default, Definition  = \"S\xC3\xA9lectionnez un dossier"
+		#Tag Instance, Platform = Any, Language = fr, Definition  = \"S\xC3\xA9lectionnez un dossier"
+		#Tag Instance, Platform = Any, Language = en, Definition  = \"Select a folder"
+		#Tag Instance, Platform = Any, Language = en-GB, Definition  = \"Select a folder"
 	#tag EndConstant
 
 	#tag Constant, Name = kTitleWinFolder, Type = String, Dynamic = False, Default = \"Gestion des dossiers bancaires", Scope = Public
