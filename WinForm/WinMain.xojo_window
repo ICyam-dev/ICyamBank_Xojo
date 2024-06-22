@@ -90,13 +90,8 @@ End
 #tag WindowCode
 	#tag Event
 		Sub Activated()
-		  // ------------Mise à jour de la barre de statu
-		  If bdd_ICyamBank <> "" Then
-		    Label_StatuBar.Text = texte_StatuBar(bdd_ICyamBank + "," + "Version : " + App.ICyamBankVersion) //Séparateur de paramètre à afficher ","
-		  Else
-		    Label_StatuBar.Text = texte_StatuBar("Version : " + App.ICyamBankVersion)
-		  End
-		  
+		  //------------ Mise à jour de la barre de statu
+		  Label_StatuBar.Text = texte_StatuBar(info_statuBar)
 		End Sub
 	#tag EndEvent
 
@@ -108,7 +103,15 @@ End
 		  Self.Maximize
 		  
 		  //--------- Récupération du numéro de version du logiciel
-		  App.ICyamBankVersion = AppVersion()
+		  App.ICyamBankVersion = AppVersion() 
+		  
+		  //--------- Information sur la barre de statu
+		  info_statuBar = App.ICyamBankVersion
+		  
+		  //--------- Ouverture de la fenetre d'ouverture des dossier si aucun d'ossier n'est actif
+		  If bdd_ICyamBank = "" Then
+		    WinFolder.ShowModal
+		  End
 		  
 		  
 		End Sub
@@ -134,8 +137,8 @@ End
 	#tag EndMenuHandler
 
 
-	#tag Method, Flags = &h0
-		Function AppVersion() As String
+	#tag Method, Flags = &h21
+		Private Function AppVersion() As String
 		  //Informations Dynamiques sur la version du Programme
 		  Dim fullVersion, stagev As String
 		  If App.StageCode = 0 Then stagev = "d"
@@ -178,6 +181,10 @@ End
 
 	#tag Property, Flags = &h0
 		bdd_ICyamBank As string
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		info_statuBar As String
 	#tag EndProperty
 
 

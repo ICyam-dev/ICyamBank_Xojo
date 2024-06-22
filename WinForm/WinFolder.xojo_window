@@ -595,6 +595,9 @@ End
 		    //Enregistrement de l'élémént de la Base de donnée
 		    WinMain.bdd_ICyamBank = TFNameFolder.Text + TFLocationFolder.Text + ".sqlite"
 		    
+		    //Mise à jour des informations sur la barre de statu
+		    WinMain.info_statuBar = WinMain.bdd_ICyamBank + "," + WinMain.info_statuBar
+		    
 		    //MessageBox(WinMain.bdd_ICyamBank)
 		    
 		  End
