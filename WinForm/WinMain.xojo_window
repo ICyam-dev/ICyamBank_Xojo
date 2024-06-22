@@ -10,7 +10,7 @@ Begin DesktopWindow WinMain
    HasFullScreenButton=   False
    HasMaximizeButton=   True
    HasMinimizeButton=   True
-   Height          =   400
+   Height          =   788
    ImplicitInstance=   True
    MacProcID       =   0
    MaximumHeight   =   32000
@@ -23,11 +23,83 @@ Begin DesktopWindow WinMain
    Title           =   "ICyamBank"
    Type            =   0
    Visible         =   True
-   Width           =   600
+   Width           =   1030
+   Begin DesktopLabel Label_StatuBar
+      AllowAutoDeactivate=   True
+      Bold            =   False
+      Enabled         =   True
+      FontName        =   "System"
+      FontSize        =   0.0
+      FontUnit        =   0
+      Height          =   20
+      Index           =   -2147483648
+      Italic          =   False
+      Left            =   3
+      LockBottom      =   True
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   True
+      LockTop         =   False
+      Multiline       =   False
+      Scope           =   0
+      Selectable      =   False
+      TabIndex        =   0
+      TabPanelIndex   =   0
+      TabStop         =   True
+      Text            =   ""
+      TextAlignment   =   0
+      TextColor       =   &c000000
+      Tooltip         =   ""
+      Top             =   767
+      Transparent     =   False
+      Underline       =   False
+      Visible         =   True
+      Width           =   1025
+   End
+   Begin DesktopSeparator Separator_StatuBar
+      Active          =   False
+      AllowAutoDeactivate=   True
+      AllowTabStop    =   True
+      Enabled         =   True
+      Height          =   20
+      Index           =   -2147483648
+      InitialParent   =   ""
+      Left            =   3
+      LockBottom      =   True
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   True
+      LockTop         =   False
+      PanelIndex      =   0
+      Scope           =   0
+      TabIndex        =   2
+      TabPanelIndex   =   0
+      Tooltip         =   ""
+      Top             =   756
+      Transparent     =   False
+      Visible         =   True
+      Width           =   1025
+      _mIndex         =   0
+      _mInitialParent =   ""
+      _mName          =   ""
+      _mPanelIndex    =   0
+   End
 End
 #tag EndDesktopWindow
 
 #tag WindowCode
+	#tag Event
+		Sub Activated()
+		  // ------------Mise à jour de la barre de statu
+		  If bdd_ICyamBank <> "" Then
+		    Label_StatuBar.Text = texte_StatuBar(bdd_ICyamBank + "," + "Version : " + App.ICyamBankVersion) //Séparateur de paramètre à afficher ","
+		  Else
+		    Label_StatuBar.Text = texte_StatuBar("Version : " + App.ICyamBankVersion)
+		  End
+		  
+		End Sub
+	#tag EndEvent
+
 	#tag Event
 		Sub Opening()
 		  //Paramètre d'ouverture de la fenetre principale
@@ -73,6 +145,33 @@ End
 		  fullVersion = Str(App.MajorVersion) + "." + Str(App.MinorVersion) + "." + Str(App.BugVersion) + "." +  Str(App.NonReleaseVersion)
 		  
 		  Return stagev + fullVersion
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
+		Private Function texte_StatuBar(ch As String) As String
+		  //Déclaration des variables
+		  //----Chaine de retour
+		  //----Tableau de chaine à afficher
+		  //----Longueur du tableau
+		  Var ch_retour, chaine() As String
+		  Var nb_ch, i As Integer
+		  
+		  chaine = ch.ToArray(",") //Création du tableau de chaine (Séparateur ",")
+		  
+		  ch_retour = "" //initialisation de la chaine de retour
+		  
+		  nb_ch = chaine.LastIndex //Longeur du tableau
+		  
+		  For i = 0 To nb_ch
+		    
+		    ch_retour = ch_retour + chaine(i) //Contruction de la chaine du la barre de statu
+		    
+		    If i < nb_ch Then ch_retour = ch_retour + " | " //Mettre en place du séparateur
+		    
+		  Next
+		  
+		  Return ch_retour
 		End Function
 	#tag EndMethod
 
@@ -326,6 +425,6 @@ End
 		Group="Behavior"
 		InitialValue=""
 		Type="string"
-		EditorType=""
+		EditorType="MultiLineEditor"
 	#tag EndViewProperty
 #tag EndViewBehavior

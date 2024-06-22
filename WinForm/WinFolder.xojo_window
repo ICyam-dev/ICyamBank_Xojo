@@ -432,7 +432,7 @@ End
 		    If bs <> Nil Then
 		      // Lire tout le contenu du fichier avec l'encodage UTF-8
 		      fileForder = bs.Read(bs.Length, Encodings.UTF8)
-		      MessageBox("Contenu du fichier : " + fileForder)
+		      //MessageBox("Contenu du fichier : " + fileForder)
 		      // Fermer le flux binaire
 		      bs.Close
 		    End If
@@ -444,7 +444,7 @@ End
 		    folders = fileForder.ToArray(";")
 		    
 		    // Parcourir chaque entrée
-		    For i = 0 To folders.LastIndex
+		    For i = 0 To folders.LastIndex - 1
 		      
 		      //Trouver la position de la virgule (",") dans l'entrée et extraire les datas
 		      posCol = InStr(folders(i), ",")
@@ -462,7 +462,7 @@ End
 		    outputStream = TextOutputStream.Create(f)
 		    outputStream.Close
 		    
-		    MessageBox("Le fichier folder.icb n'existe pas et a été créé.")
+		    //MessageBox("Le fichier folder.icb n'existe pas et a été créé.")
 		  End If
 		End Sub
 	#tag EndEvent
