@@ -434,4 +434,12 @@ End
 		Type="string"
 		EditorType="MultiLineEditor"
 	#tag EndViewProperty
+	#tag ViewProperty
+		Name="info_statuBar"
+		Visible=false
+		Group="Behavior"
+		InitialValue=""
+		Type="String"
+		EditorType="MultiLineEditor"
+	#tag EndViewProperty
 #tag EndViewBehavior
